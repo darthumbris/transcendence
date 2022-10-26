@@ -3,12 +3,12 @@
 
     const a = 2 * Math.PI / 6;
     const r = window.innerWidth / 40;
-    const border = 100;
+    export const border = 100;
     const b_r = 10;
     const field_radius = window.innerWidth * 0.4;
     const goalHeight = 300;
     const goalWidth = 50;
-    const color_grid = 'rgba(100, 100, 100, 0.5)'
+    const color_grid = 'rgba(75, 75, 75, 0.7)'
     const color_l_f = 'rgba(213, 172, 28, 0.7)';
     const color_l_s = 'rgba(213, 172, 28, 0.9)';
     const color_r_f = 'rgba(65, 190, 220, 0.7)';
@@ -16,12 +16,14 @@
     const color_stop = "rgba(50,50,50, 0.95)";
     const color_border = `rgba(222, 229, 19, 0.9)`;
     const canvasSize = window.innerWidth * window.innerHeight;
-    const starsFraction = canvasSize / 6000;
+    const starsFraction = canvasSize / 5000;
     let star_arr = [];
-    const offset = border - 10;
+    const linethickness = 10;
+    const offset_rect = border - linethickness / 2;
 
 
     const setup = ({ context, width, height }) => {
+        console.log("width: ", width, " height: ", height);
         context.webkitImageSmoothingEnabled = false;
         context.ImageSmoothingEnabled = false;
         for(let i = 0; i < starsFraction; i++) {
@@ -29,7 +31,7 @@
             let rect = {
             x: random(2, width - 2),
             y: random(2, height - 2),
-            a: random(0.7, 1),
+            a: random(0.5, 1),
             size: random(1, 5)
             };
             star_arr.push(rect);
@@ -38,20 +40,22 @@
 
     function drawHexagon(x, y, r, context) {
         context.beginPath();
-        for (var i = 0; i < 6; i++) {
+        for (var i = 0; i < 4; i++) {
             context.lineTo(x + r * Math.cos(a * i), y + r * Math.sin(a * i));
         }
         context.stroke();
-        
     }
 
     function drawGrid(width, height, context) {
         context.strokeStyle = color_grid;
         context.lineWidth = 5;
-        
-        for (let y = -3 * r; y + r * Math.sin(a) < height + r; y += r * Math.sin(a)) {
-            for (let x = -r, j = 0; x + r * (1 + Math.cos(a)) < width + 3 * r; 
-                x += r * (1 + Math.cos(a)), y += (-1) ** j++ * r * Math.sin(a)) {
+        context.lineCap = 'round';
+        for (let y = -r + 6; y + r * Math.sin(a) < height; y += r * Math.sin(a)) {
+            for (let x = -r, 
+                j = 0; 
+                x + r * (1 + Math.cos(a)) < width + 2.51 * r; 
+                x += r * (1 + Math.cos(a)), 
+                y += (-1) ** j++ * r * Math.sin(a)) {
                 drawHexagon(x, y, r, context);
             }
         }
@@ -59,11 +63,11 @@
     }
 
     function drawLeftField(width, height, context) {
-        const gradient = context.createRadialGradient(border, height * 0.5, field_radius, border, height / 2, 0);
+        const gradient = context.createRadialGradient(border, height / 2, field_radius, border, height / 2, 0);
         gradient.addColorStop(1, color_l_s);
         gradient.addColorStop(0, color_stop);
         context.fillStyle = gradient;
-        context.fillRect(offset, offset, width / 2 - offset, height - 2 * offset - 5);
+        context.fillRect(offset_rect, offset_rect, width / 2 - offset_rect, height - 2 * offset_rect);
     }
 
     function drawRightField(width, height, context) {
@@ -71,7 +75,7 @@
         gradient.addColorStop(1, color_r_f);
         gradient.addColorStop(0, color_stop);
         context.fillStyle = gradient;
-        context.fillRect(width / 2, offset, width / 2 - offset - 5, height - 2 * offset - 5);
+        context.fillRect(width / 2, offset_rect, width / 2 - offset_rect, height - 2 * offset_rect);
     }
 
     function drawMiddleLine(width, height, context) {
@@ -149,7 +153,7 @@
 
     function drawStars(width, height, context) {
         context.save();
-        context.fillStyle = '#ffffff';
+        context.fillStyle = 'white';
         star_arr.forEach((element, index, array) => {
         context.globalAlpha = element.a;
         context.fillRect(element.x, element.y, element.size, element.size);
