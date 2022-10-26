@@ -1,0 +1,22 @@
+img {
+    /* width: 160px; */
+    display: none;
+}
+
+#gameScreen {
+    border: 1px solid black;
+}
+
+/* body {
+    background-color: #1b1b1b;
+}
+
+.header {
+    background-color: #1b1b1b;
+    height: 100px;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: center;
+} */
